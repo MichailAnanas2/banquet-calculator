@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light">
+<title>Банкетное меню — интерактивный калькулятор</title>
+<style>
+:root{--ink:#171717;--muted:#686868;--soft:#8c8c8c;--line:#e9e9e9;--red:#b71d2c;--green:#14754a;--bg:#fff;--pale:#f7f7f7}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#fff;font:14px/1.52 system-ui,-apple-system,'Segoe UI',Arial,sans-serif;color:var(--ink)}button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.38;cursor:not-allowed}input,textarea{background:#fff;color:var(--ink)}:focus-visible{outline:2px solid var(--red);outline-offset:2px}.container{max-width:1070px;margin:0 auto;padding:0 28px}.topline{border-bottom:1px solid var(--line)}.topinner{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-size:29px;font-weight:700;letter-spacing:.31em;line-height:1}.brand small{font-size:9px;display:block;letter-spacing:.19em;color:#999;margin-top:11px;font-weight:600}.topright{color:#777;font-size:12px;text-align:right;line-height:1.65}.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid #ddd;margin-top:19px;gap:12px}.tab{border:0;border-bottom:3px solid transparent;background:transparent;padding:14px 4px;color:#777;font-size:14px;font-weight:650;white-space:nowrap}.tab.active{color:#151515;border-bottom-color:var(--red)}.tab:hover{color:#111}.topSummary{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:21px 0 20px;border-bottom:1px solid var(--line)}.inputs{display:flex;gap:26px;align-items:end;flex-wrap:wrap}.smallfield label{display:block;color:#888;font-size:11px;font-weight:650;letter-spacing:.09em;text-transform:uppercase;margin-bottom:7px}.smallfield input{border:1px solid #ddd;border-radius:7px;min-height:41px;width:112px;padding:6px 10px;font-size:18px;font-weight:650;text-align:center}.smallfield input.budget{width:140px}.moneyinfo{display:flex;gap:26px;align-items:end}.moneyinfo div{text-align:right}.moneyinfo small{display:block;font-size:11px;color:#868686;text-transform:uppercase;letter-spacing:.07em}.moneyinfo strong{font-size:22px;letter-spacing:-.035em;font-weight:650;white-space:nowrap}.moneyinfo .remaining{color:var(--green)}.moneyinfo .over{color:var(--red)}.page{display:none;padding:33px 0 70px}.page.active{display:block}.page-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:24px}.page-head h1{font-size:clamp(26px,3.5vw,37px);font-weight:570;letter-spacing:-.045em;line-height:1.12;margin:0 0 7px}.subtext{color:#777;font-size:12px;margin:0}.searchrow{display:flex;align-items:center;gap:11px;margin:22px 0 15px}.searchrow input{flex:1;min-width:0;border:1px solid #e3e3e3;border-radius:8px;height:42px;padding:0 13px;font-size:13px}.simplebtn{border:1px solid #dadada;border-radius:8px;background:#fff;color:#222;font-weight:600;font-size:12px;min-height:40px;padding:0 15px;white-space:nowrap}.simplebtn:hover{background:#f4f4f4}.simplebtn.dark{background:#1c1c1c;color:#fff;border-color:#1c1c1c}.simplebtn.dark:hover{background:#404040}.simplebtn.red{background:var(--red);color:white;border-color:var(--red)}.simplebtn.red:hover{background:#981723}.simplebtn.thin{border:0;color:#777;background:transparent}.filterrow{display:flex;overflow-x:auto;gap:20px;white-space:nowrap;padding:1px 0 13px;border-bottom:1px solid #e8e8e8;scrollbar-width:thin}.filterbtn{padding:5px 0;border:0;background:transparent;font-size:12px;color:#888;white-space:nowrap;font-weight:600;border-bottom:1px solid transparent}.filterbtn.active{color:var(--ink);border-bottom-color:var(--ink)}.category{margin-top:32px}.category h2{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:#777;padding:0 0 13px;margin:0;border-bottom:1px solid #ddd;font-weight:750}.menuitem{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:12px 24px;padding:21px 3px 22px;border-bottom:1px solid #eee}.menuitem:hover{background:linear-gradient(to right,#fff,#fafafa)}.menuitem.selected{box-shadow:inset 3px 0 var(--red);padding-left:11px}.dishname{font-size:18px;font-weight:680;line-height:1.32;letter-spacing:-.018em}.description{font-size:11px;color:#858585;margin-top:6px;line-height:1.6;max-width:660px}.spec{font-size:11px;color:#777;margin-top:6px}.itemright{display:flex;flex-direction:column;align-items:flex-end;gap:11px}.price{font-size:18px;font-weight:680;white-space:nowrap}.stepper{display:flex;align-items:center;gap:3px}.stepper button{width:32px;height:32px;border:1px solid #e1e1e1;background:#fff;border-radius:6px;font-size:19px;line-height:1;font-weight:400}.stepper button:hover{background:#f3f3f3}.stepper input{height:32px;width:48px;border:1px solid #e1e1e1;border-radius:6px;text-align:center;font-weight:700;font-size:13px;appearance:textfield}.stepper input::-webkit-inner-spin-button{-webkit-appearance:none}.subtotal{font-size:11px;color:var(--red);font-weight:700}.varblock{grid-column:1/-1;background:#fafafa;border-radius:8px;padding:12px 14px;display:flex;flex-wrap:wrap;gap:9px 24px}.varlabel{font-size:11px;color:#555;font-weight:600;margin-right:auto}.varitem{display:flex;align-items:center;gap:8px;font-size:12px;color:#555}.varitem .stepper button,.varitem .stepper input{height:30px}.varitem .stepper button{width:29px}.variantnote{grid-column:1/-1;font-size:11px;color:#777}.variantnote input{height:34px;padding:0 11px;border:1px solid #ddd;border-radius:6px;width:min(420px,100%);max-width:100%}.empty{padding:32px 4px;color:#999;font-size:13px}.smallmuted{font-size:11px;color:#888}.options-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.modecard{border:1px solid #ddd;border-radius:11px;padding:22px 22px 20px;cursor:pointer;transition:border-color .15s,background .15s;min-height:126px;background:white;position:relative}.modecard:hover{background:#fafafa}.modecard.active{border-color:#222;box-shadow:inset 0 0 0 1px #222}.modecard .mark{position:absolute;top:20px;right:20px;width:17px;height:17px;border:1px solid #bdbdbd;border-radius:50%}.modecard.active .mark{border:5px solid #222}.modecard h3{font-size:19px;margin:0 28px 7px 0;font-weight:650;letter-spacing:-.03em}.modecard p{font-size:12px;color:#888;line-height:1.55;margin:0;max-width:390px}.autofooter{border-top:1px solid #eee;margin-top:25px;padding-top:22px;display:flex;gap:18px;justify-content:space-between;align-items:center;flex-wrap:wrap}.toggle{display:flex;gap:9px;align-items:center;color:#666;font-size:12px;cursor:pointer}.toggle input{width:18px;height:18px;accent-color:#222}.resultnote{margin:20px 0 0;border:1px solid #e4e4e4;background:#f8f8f8;padding:15px 17px;border-radius:9px;font-size:13px;color:#555}.resultnote:empty{display:none}.resultnote.warn{background:#fff6f6;border-color:#eec5c5;color:#9b1726}.actionsrow{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.details{margin-top:18px;border-top:1px solid #eee;padding-top:16px}.details summary{cursor:pointer;color:#666;font-size:12px;font-weight:650}.details .detailsbody{padding:17px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.details label{display:block;color:#777;font-size:11px;margin-bottom:6px}.details input,.details textarea{width:100%;border:1px solid #ddd;border-radius:7px;min-height:39px;padding:8px 10px;font-size:13px}.details textarea{min-height:68px;resize:vertical}.detailspan{grid-column:1/-1}.order-sheet{border:1px solid #e8e8e8;padding:26px 32px;margin-top:24px}.sheetheader{display:flex;justify-content:space-between;gap:16px;align-items:baseline;border-bottom:2px solid #1c1c1c;padding-bottom:17px}.sheetheader b{font-size:25px;letter-spacing:.25em}.sheetheader small{font-size:11px;color:#777}.ordertable{border-collapse:collapse;width:100%;margin-top:22px}.ordertable th{text-transform:uppercase;font-size:10px;letter-spacing:.08em;color:#888;text-align:left;border-bottom:1px solid #ddd;padding:8px 6px 10px}.ordertable td{padding:12px 6px;border-bottom:1px solid #eee;font-size:12px;vertical-align:top}.ordertable td:nth-child(2),.ordertable td:nth-child(3),.ordertable td:nth-child(4),.ordertable th:nth-child(2),.ordertable th:nth-child(3),.ordertable th:nth-child(4){text-align:right;white-space:nowrap}.ordertable td:first-child strong{font-size:13px;font-weight:670}.sheetcat td{padding-top:23px;font-size:11px;font-weight:750;text-transform:uppercase;letter-spacing:.11em;color:#555;border-bottom:1px solid #ddd}.sheetcaption{font-size:11px;color:#888;margin-top:4px}.sheetbottom{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-top:24px}.sheetbottom strong{font-size:29px;letter-spacing:-.05em}.sheetinfo{color:#777;font-size:12px}.sheetalert{font-size:12px;color:#96512f;margin-top:15px}.printmeta{display:none;font-size:11px;color:#555;margin-top:11px}.printnote{margin-top:30px;font-size:10px;color:#888;border-top:1px solid #ddd;padding-top:10px}.footer{border-top:1px solid #eee;color:#999;font-size:11px;padding:20px 0 30px}.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:40;background:#202020;color:white;padding:11px 19px;border-radius:9px;font-size:12px;box-shadow:0 6px 28px #0003;max-width:90%;display:none}.toast.show{display:block}.toast.error{background:#a42230}
+@media(max-width:800px){.container{padding:0 17px}.topinner{height:67px}.brand{font-size:24px}.topright{font-size:10px}.topSummary{align-items:flex-start;flex-direction:column;gap:14px}.moneyinfo{justify-content:space-between;width:100%;border-top:1px solid #eee;padding-top:12px}.moneyinfo div{text-align:left}.menuitem{grid-template-columns:minmax(0,1fr) 110px;column-gap:12px}.dishname{font-size:16px}.price{font-size:16px}.itemright{gap:12px}.modecard{min-height:138px}.order-sheet{padding:17px 14px}.page{padding-top:25px}}
+@media(max-width:520px){.brand{font-size:21px}.brand small{font-size:8px}.topright{font-size:10px}.tabs{gap:2px;margin-top:11px}.tab{font-size:12px;padding:12px 2px}.topSummary{padding:15px 0}.inputs{gap:13px;width:100%;flex-wrap:nowrap}.smallfield{min-width:0;flex:1}.smallfield input,.smallfield input.budget{width:100%;min-height:40px;font-size:17px}.moneyinfo{gap:10px}.moneyinfo strong{font-size:17px}.moneyinfo small{font-size:9px}.page-head h1{font-size:28px}.page-head{flex-wrap:wrap}.searchrow{gap:6px}.searchrow .simplebtn{font-size:11px;padding:0 10px}.menuitem{grid-template-columns:minmax(0,1fr) 106px;padding:17px 0 18px}.dishname{font-size:16px}.price{font-size:15px}.description{font-size:11px}.spec{font-size:10px}.stepper button{width:30px;height:32px}.stepper input{width:37px}.options-grid{grid-template-columns:1fr}.modecard{min-height:110px;padding:17px}.autofooter{align-items:stretch}.autofooter .simplebtn{width:100%}.ordertable td,.ordertable th{padding-left:3px;padding-right:3px;font-size:10px}.ordertable td:first-child strong{font-size:11px}.sheetheader b{font-size:21px}.sheetbottom strong{font-size:24px}.actionsrow .simplebtn{flex:1}.varblock{gap:10px}.varitem{width:100%;justify-content:space-between}}
+@media print{@page{size:A4;margin:13mm 12mm}body{font-size:11px}header,.tabs,.topSummary,.page:not(#resultPage),.page-head,.actionsrow,.details,.footer,.toast{display:none!important}#resultPage{display:block!important;padding:0!important}.container{max-width:none;padding:0}.order-sheet{padding:0;border:0;margin:0}.printmeta{display:block}.ordertable th,.ordertable td{padding:6px 4px}.sheetbottom strong{font-size:20px}.sheetcat,.ordertable tr{break-inside:avoid}.printnote{margin-top:18px}}
+
+/* Выбор одного или двух горячих: компактный блок в автоматическом режиме */
+.hotbox{border:1px solid #dedede;border-radius:12px;margin-top:28px;padding:24px;background:#fff}
+.hothead{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.hothead h2{font-size:19px;font-weight:660;letter-spacing:-.028em;margin:0}
+.hotcheck{font-size:12px;display:flex;align-items:center;gap:9px;color:#363636;cursor:pointer}
+.hotcheck input{height:18px;width:18px;accent-color:#1e1e1e}
+.hotgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:20px}
+.hotcount{border:0;padding:0;margin:18px 0 0;display:flex;gap:10px;flex-wrap:wrap}.hotcount legend{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.085em;color:#777;margin-bottom:8px}.hotcount label{display:flex;align-items:center;gap:8px;border:1px solid #ddd;border-radius:8px;padding:9px 13px;cursor:pointer}.hotcount label:has(input:checked){border-color:#222;background:#f6f6f6}.hotcount input{accent-color:#222;margin:0;width:16px;height:16px}.hotgrid.single{grid-template-columns:minmax(0,1fr)}[hidden]{display:none!important}.hotfield label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.085em;display:block;margin-bottom:8px;color:#777}
+.hotfield select,.hotfield input{width:100%;min-height:44px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#171717;padding:9px 11px;font-size:13px}
+.hotfield .amount{font-size:12px;color:#777;margin-top:7px}
+.hotfield input{max-width:155px;font-weight:650;font-size:17px}
+.hotcost{background:#f7f7f7;border-radius:8px;margin-top:17px;padding:13px 15px;font-size:12px;color:#555;line-height:1.65}
+.hotcost strong{color:#151515;font-size:15px;font-weight:700}
+.hotcost.error{border:1px solid #e6bbbb;background:#fff7f7;color:#a42230}
+.hotcost.error strong{color:#a42230}
+.hotbox .smallmuted{margin-top:10px;line-height:1.5}
+@media(max-width:650px){.hotbox{padding:18px 15px;margin-top:20px}.hotgrid{grid-template-columns:1fr;gap:18px}.hothead h2{font-size:18px}}
+
+.demoNotice{margin:18px 0 0;padding:11px 14px;border:1px solid #e2e5e7;background:#f5f7f7;border-radius:8px;font-size:12px;line-height:1.5;color:#4b5355}.demoNotice strong{color:#273334}@media print{.demoNotice{display:none!important}}
+</style>
+</head>
+<body>
+<header class="topline"><div class="container topinner"><div class="brand">БАНКЕТ<small>ИНТЕРАКТИВНОЕ МЕНЮ</small></div><div class="topright">ДЕМОНСТРАЦИОННАЯ ВЕРСИЯ<br>Свадьбы · юбилеи · корпоративы</div></div></header>
+<div class="container">
+<div class="demoNotice"><strong>Демонстрационный калькулятор</strong> · Блюда, порции и цены условные. Возможна адаптация под меню вашего заведения.</div><nav class="tabs" role="tablist" aria-label="Режим калькулятора"><button type="button" class="tab active" id="tabManual" role="tab" aria-selected="true">Ручной</button><button type="button" class="tab" id="tabAuto" role="tab" aria-selected="false">Автоматический</button><button type="button" class="tab" id="tabResult" role="tab" aria-selected="false">Итог <span id="tabCount"></span></button></nav>
+<div class="topSummary"><div class="inputs"><div class="smallfield"><label for="guestsInput">Гостей</label><input id="guestsInput" type="number" min="1" max="300" value="10" inputmode="numeric"></div><div class="smallfield"><label for="budgetInput">Бюджет / человек, ₽</label><input class="budget" id="budgetInput" type="number" min="0" max="10000000" step="100" value="3500" inputmode="numeric"></div></div><div class="moneyinfo"><div><small>Лимит</small><strong id="budgetTotal">35 000 ₽</strong></div><div><small>Заказ</small><strong id="spentTotal">0 ₽</strong></div><div><small>Осталось</small><strong class="remaining" id="remainingTotal">35 000 ₽</strong></div></div></div>
+<section class="page active" id="manualPage" role="tabpanel"><div class="page-head"><div><h1>Выбор блюд</h1><p class="subtext">Названия, состав, порции и цены приведены для примера. Салаты и гарниры подаются на общих тарелках.</p></div><button class="simplebtn" id="clearOrderBtn" type="button">Очистить заказ</button></div>
+<div class="searchrow"><input id="searchInput" placeholder="Найти блюдо или ингредиент" autocomplete="off"><button type="button" class="simplebtn" id="onlyChosen">Только выбранные</button></div><div id="filterRow" class="filterrow" role="group" aria-label="Разделы меню"></div><div id="catalog"></div></section>
+<section class="page" id="autoPage" role="tabpanel"><div class="page-head"><div><h1>Подбор меню</h1><p class="subtext">Выберите подход, укажите бюджет сверху. Готовый вариант можно изменить в ручном режиме.</p></div></div>
+<div class="options-grid" id="modes"><div class="modecard" data-mode="economy" role="button" tabindex="0"><span class="mark"></span><h3>Экономное</h3><p>Простые блюда и доступные позиции. Главный приоритет — не выйти за бюджет.</p></div><div class="modecard active" data-mode="standard" role="button" tabindex="0"><span class="mark"></span><h3>Сбалансированное</h3><p>Горячее, салаты, закуски и напитки в пределах бюджета.</p></div><div class="modecard" data-mode="festive" role="button" tabindex="0"><span class="mark"></span><h3>Праздничное</h3><p>Больше разнообразия, дорогих закусок и праздничных блюд.</p></div><div class="modecard" data-mode="hearty" role="button" tabindex="0"><span class="mark"></span><h3>Сытное</h3><p>Максимум известного веса еды при разумных ограничениях на порции. Не оценка калорийности.</p></div></div>
+<div class="hotbox" id="hotBox"><div class="hothead"><h2>Горячее для всех гостей</h2><label class="hotcheck"><input type="checkbox" id="customHotToggle" checked> Выбрать самостоятельно</label></div>
+<p class="subtext" style="margin:9px 0 0">Выберите одно или два разных горячих блюда. <b>Каждый выбранный вид — по одной порции каждому гостю.</b> Остальное меню подбирается на оставшийся бюджет.</p>
+<div id="hotControls"><fieldset class="hotcount"><legend>Количество видов горячего</legend><label><input type="radio" name="hotKinds" value="1" checked> Одно горячее</label><label><input type="radio" name="hotKinds" value="2"> Два горячих</label></fieldset><div class="hotgrid" id="hotGrid"><div class="hotfield"><label for="hotOne">Первое горячее</label><select id="hotOne"></select><div class="amount">Порций: <strong id="hotOneQty">10</strong> (по одной каждому)</div></div><div class="hotfield" id="hotTwoField" hidden><label for="hotTwo">Второе горячее</label><select id="hotTwo"></select><div class="amount">Порций: <strong id="hotTwoCount">10</strong> (по одной каждому)</div></div></div><div id="hotBudgetInfo" class="hotcost" role="status"></div></div>
+<p class="smallmuted">Автоматический подбор всегда <b>без алкоголя</b>. В ручном режиме полный список бара остаётся доступен в демонстрационном меню.</p></div>
+<div class="autofooter"><span class="subtext">После выбора горячего подберём закуски, салаты, гарниры и безалкогольные напитки, не превышая бюджет.</span><button type="button" class="simplebtn dark" id="generateBtn">Составить меню →</button></div><div class="resultnote" id="autoInfo"></div><p class="subtext" style="margin-top:17px">Автоподбор заменяет текущий заказ после подтверждения. Если денег не хватает на выбранное горячее, заказ не изменится.</p></section>
+<section class="page" id="resultPage" role="tabpanel"><div class="page-head"><div><h1>Итоговый заказ</h1><p class="subtext">Готовая таблица для согласования с гостями или банкетным менеджером.</p></div></div>
+<div class="actionsrow"><button id="exportXlsx" class="simplebtn dark" type="button">Excel · XLSX</button><button id="printBtn" class="simplebtn" type="button">PDF / печать</button><button id="exportJson" class="simplebtn" type="button">Сохранить заказ</button><button id="importJson" class="simplebtn" type="button">Загрузить заказ</button><input id="importFile" type="file" accept="application/json,.json" hidden></div>
+<details class="details"><summary>Данные заказчика и дополнительные действия</summary><div class="detailsbody"><div><label for="clientName">Имя / отдел</label><input id="clientName" maxlength="160" placeholder="Например, организатор мероприятия"></div><div><label for="clientPhone">Телефон</label><input id="clientPhone" maxlength="160" placeholder="Необязательно"></div><div><label for="eventDate">Дата и время</label><input id="eventDate" maxlength="160" placeholder="Например, 15 июня, 18:00"></div><div><label for="clientNotes">Пожелания</label><textarea id="clientNotes" maxlength="400" placeholder="Время подачи и прочие примечания"></textarea></div><div class="detailspan actionsrow"><button type="button" class="simplebtn" id="copyOrder">Копировать текст</button><button type="button" class="simplebtn" id="saveHtml">Скачать калькулятор HTML</button></div></div></details>
+<div class="order-sheet" id="printSheet"><div class="sheetheader"><b>БАНКЕТ</b><small>ДЕМОНСТРАЦИОННЫЙ РАСЧЁТ</small></div><div class="printmeta" id="printMeta"></div><div id="summaryLine" style="font-size:12px;color:#555;margin-top:16px"></div><div id="orderRows"></div><div class="sheetbottom"><div class="sheetinfo" id="sheetMass"></div><div style="text-align:right"><div class="smallmuted">СУММА ЗАКАЗА</div><strong id="sheetTotal">0 ₽</strong><div class="smallmuted" id="sheetPerPerson"></div></div></div><div class="sheetalert" id="sheetAlerts"></div><div class="printnote">Салаты и гарниры подаются в общих тарелках. Цены и блюда условные. Итоговый заказ необходимо согласовать с заведением.</div></div></section>
+</div>
+<footer class="footer"><div class="container">Демонстрационный банкетный калькулятор · Не является предложением конкретного ресторана</div></footer><div class="toast" id="toast" role="status"></div>
+<script>
+const MENU_ITEMS = [
+  {
+    "id": "cold_meat_set",
+    "category": "cold",
+    "name": "Мясное ассорти",
+    "weightLabel": "220 г",
+    "weightGrams": 220,
+    "volumeMl": 0,
+    "price": 890,
+    "description": "Ростбиф, буженина, куриный рулет, горчица."
+  },
+  {
+    "id": "cold_cheese_set",
+    "category": "cold",
+    "name": "Сырная тарелка",
+    "weightLabel": "250 г",
+    "weightGrams": 250,
+    "volumeMl": 0,
+    "price": 990,
+    "description": "Четыре вида сыра, виноград, орехи, мёд."
+  },
+  {
+    "id": "cold_salmon",
+    "category": "cold",
+    "name": "Слабосолёная форель",
+    "weightLabel": "150 г",
+    "weightGrams": 150,
+    "volumeMl": 0,
+    "price": 850,
+    "description": "Форель, лимон, зелень."
+  },
+  {
+    "id": "cold_ham_rolls",
+    "category": "cold",
+    "name": "Рулетики из ветчины",
+    "weightLabel": "180 г",
+    "weightGrams": 180,
+    "volumeMl": 0,
+    "price": 490,
+    "description": "Ветчина, сыр, чеснок, зелень."
+  },
+  {
+    "id": "cold_roastbeef",
+    "category": "cold",
+    "name": "Ростбиф с соусом",
+    "weightLabel": "180 г",
+    "weightGrams": 180,
+    "volumeMl": 0,
+    "price": 780,
+    "description": "Говядина, листовой салат, горчичный соус."
+  },
+  {
+    "id": "cold_eggplant_veg",
+    "category": "cold",
+    "name": "Баклажаны с овощами",
+    "weightLabel": "200 г",
+    "weightGrams": 200,
+    "volumeMl": 0,
+    "price": 420,
+    "description": "Баклажаны, томаты, сладкий перец, зелень."
+  },
+  {
+    "id": "cold_tartlets_caviar",
+    "category": "cold",
+    "name": "Тарталетки с лососем",
+    "weightLabel": "160 г",
+    "weightGrams": 160,
+    "volumeMl": 0,
+    "price": 790,
+    "description": "Четыре тарталетки с рыбой и сливочным сыром."
+  },
+  {
+    "id": "cold_vegetable_plate",
+    "category": "cold",
+    "name": "Овощное ассорти",
+    "weightLabel": "250 г",
+    "weightGrams": 250,
+    "volumeMl": 0,
+    "price": 450,
+    "description": "Огурцы, томаты, редис, зелень."
+  },
+  {
+    "id": "cold_lemon",
+    "category": "cold",
+    "name": "Лимонная нарезка",
+    "weightLabel": "80 г",
+    "weightGrams": 80,
+    "volumeMl": 0,
+    "price": 120,
+    "description": ""
+  },
+  {
+    "id": "cold_olives",
+    "category": "cold",
+    "name": "Оливки и маслины",
+    "weightLabel": "120 г",
+    "weightGrams": 120,
+    "volumeMl": 0,
+    "price": 390,
+    "description": ""
+  },
+  {
+    "id": "cold_bruschetta_set",
+    "category": "cold",
+    "name": "Ассорти брускетт",
+    "weightLabel": "4 шт. / 240 г",
+    "weightGrams": 240,
+    "volumeMl": 0,
+    "price": 690,
+    "description": "Четыре брускетты с томатами, сыром и ростбифом."
+  },
+  {
+    "id": "cold_canape_set",
+    "category": "cold",
+    "name": "Ассорти канапе",
+    "weightLabel": "400 г",
+    "weightGrams": 400,
+    "volumeMl": 0,
+    "price": 1190,
+    "description": "Канапе с сыром, рыбой и овощами."
+  },
+  {
+    "id": "hot_beef_mash",
+    "category": "hot",
+    "name": "Томлёная говядина с пюре",
+    "weightLabel": "280 г",
+    "weightGrams": 280,
+    "volumeMl": 0,
+    "price": 990,
+    "description": "Говядина, картофельное пюре, мясной соус."
+  },
+  {
+    "id": "hot_pork_medallions",
+    "category": "hot",
+    "name": "Свинина в грибном соусе",
+    "weightLabel": "220 г",
+    "weightGrams": 220,
+    "volumeMl": 0,
+    "price": 650,
+    "description": "Свиная вырезка, шампиньоны, сливочный соус."
+  },
+  {
+    "id": "hot_trout_veg",
+    "category": "hot",
+    "name": "Форель с овощами",
+    "weightLabel": "250 г",
+    "weightGrams": 250,
+    "volumeMl": 0,
+    "price": 1150,
+    "description": "Запечённое филе форели с овощами."
+  },
+  {
+    "id": "hot_salmon_steak",
+    "category": "hot",
+    "name": "Стейк из сёмги",
+    "weightLabel": "180 г",
+    "weightGrams": 180,
+    "volumeMl": 0,
+    "price": 1090,
+    "description": "Рыба на гриле, лимон."
+  },
+  {
+    "id": "hot_pork_shashlik",
+    "category": "hot",
+    "name": "Шашлык из свинины",
+    "weightLabel": "200 г",
+    "weightGrams": 200,
+    "volumeMl": 0,
+    "price": 720,
+    "description": "Свинина, маринованный лук, томатный соус."
+  },
+  {
+    "id": "hot_chicken_grill",
+    "category": "hot",
+    "name": "Куриное филе на гриле",
+    "weightLabel": "200 г",
+    "weightGrams": 200,
+    "volumeMl": 0,
+    "price": 590,
+    "description": "Курица, зелень, соус."
+  },
+  {
+    "id": "salad_herring_fur",
+    "category": "salads",
+    "name": "Салат с сельдью и овощами",
+    "weightLabel": "220 г",
+    "weightGrams": 220,
+    "volumeMl": 0,
+    "price": 350,
+    "description": "Сельдь, картофель, свёкла, морковь, яйцо."
+  },
+  {
+    "id": "salad_greek",
+    "category": "salads",
+    "name": "Греческий салат",
+    "weightLabel": "230 г",
+    "weightGrams": 230,
+    "volumeMl": 0,
+    "price": 490,
+    "description": "Томаты, огурцы, фета, маслины."
+  },
+  {
+    "id": "salad_olivier_chicken",
+    "category": "salads",
+    "name": "Оливье с курицей",
+    "weightLabel": "240 г",
+    "weightGrams": 240,
+    "volumeMl": 0,
+    "price": 450,
+    "description": "Картофель, морковь, курица, огурец, яйцо, горошек."
+  },
+  {
+    "id": "salad_squid",
+    "category": "salads",
+    "name": "Салат с кальмаром",
+    "weightLabel": "220 г",
+    "weightGrams": 220,
+    "volumeMl": 0,
+    "price": 590,
+    "description": "Кальмар, яйцо, свежий огурец, зелень."
+  },
+  {
+    "id": "salad_caesar",
+    "category": "salads",
+    "name": "Цезарь с курицей",
+    "weightLabel": "240 г",
+    "weightGrams": 240,
+    "volumeMl": 0,
+    "price": 560,
+    "description": "Куриное филе, салат романо, сухарики, сыр, соус."
+  },
+  {
+    "id": "salad_beef_cucumbers",
+    "category": "salads",
+    "name": "Тёплый салат с говядиной",
+    "weightLabel": "230 г",
+    "weightGrams": 230,
+    "volumeMl": 0,
+    "price": 690,
+    "description": "Говядина, салат, сладкий перец, томаты."
+  },
+  {
+    "id": "side_grilled_veg",
+    "category": "sides",
+    "name": "Овощи на гриле",
+    "weightLabel": "180 г",
+    "weightGrams": 180,
+    "volumeMl": 0,
+    "price": 340,
+    "description": "Кабачок, баклажан, перец, шампиньоны."
+  },
+  {
+    "id": "side_potato_wedges",
+    "category": "sides",
+    "name": "Картофель по-деревенски",
+    "weightLabel": "180 г",
+    "weightGrams": 180,
+    "volumeMl": 0,
+    "price": 240,
+    "description": "Запечённый картофель с травами."
+  },
+  {
+    "id": "bakery_wheat_bun",
+    "category": "bakery",
+    "name": "Пшеничная булочка",
+    "weightLabel": "40 г",
+    "weightGrams": 40,
+    "volumeMl": 0,
+    "price": 55,
+    "description": ""
+  },
+  {
+    "id": "bakery_rye_bun",
+    "category": "bakery",
+    "name": "Ржаная булочка",
+    "weightLabel": "40 г",
+    "weightGrams": 40,
+    "volumeMl": 0,
+    "price": 55,
+    "description": ""
+  },
+  {
+    "id": "bakery_cheesecake",
+    "category": "bakery",
+    "name": "Чизкейк",
+    "weightLabel": "120 г",
+    "weightGrams": 120,
+    "volumeMl": 0,
+    "price": 350,
+    "description": "Вариант вкуса по согласованию.",
+    "hasVariantNote": true,
+    "variantPlaceholder": "Уточнить вид чизкейка (по желанию)"
+  },
+  {
+    "id": "bar_cola_tonic",
+    "category": "bar",
+    "name": "Газированные напитки",
+    "weightLabel": "0,33 л",
+    "weightGrams": 0,
+    "volumeMl": 330,
+    "price": 180,
+    "description": "Кола или тоник.",
+    "hasVariantNote": true,
+    "variantPlaceholder": "Например: 4 Колы, 2 Тоника"
+  },
+  {
+    "id": "bar_mineral",
+    "category": "bar",
+    "name": "Минеральная вода",
+    "weightLabel": "0,5 л",
+    "weightGrams": 0,
+    "volumeMl": 500,
+    "price": 150,
+    "description": "Вода в бутылке."
+  },
+  {
+    "id": "bar_water",
+    "category": "bar",
+    "name": "Питьевая вода",
+    "weightLabel": "0,5 л",
+    "weightGrams": 0,
+    "volumeMl": 500,
+    "price": 130,
+    "description": "С газом или без газа.",
+    "hasVariantNote": true,
+    "variantPlaceholder": "Например: 5 без газа, 5 с газом"
+  },
+  {
+    "id": "bar_juice",
+    "category": "bar",
+    "name": "Сок в ассортименте",
+    "weightLabel": "1 л",
+    "weightGrams": 0,
+    "volumeMl": 1000,
+    "price": 390,
+    "description": "Несколько вкусов на выбор.",
+    "hasVariantNote": true,
+    "variantPlaceholder": "Например: 2 апельсиновых, 2 вишнёвых, 1 яблочный"
+  },
+  {
+    "id": "bar_mors",
+    "category": "bar",
+    "name": "Ягодный морс",
+    "weightLabel": "1 л",
+    "weightGrams": 0,
+    "volumeMl": 1000,
+    "price": 360,
+    "description": "Морс из ягод."
+  },
+  {
+    "id": "bar_sparkling_brut",
+    "category": "bar",
+    "name": "Игристое вино, брют",
+    "weightLabel": "0,75 л",
+    "weightGrams": 0,
+    "volumeMl": 750,
+    "price": 1390,
+    "description": ""
+  },
+  {
+    "id": "bar_sparkling_semisweet",
+    "category": "bar",
+    "name": "Игристое вино, полусладкое",
+    "weightLabel": "0,75 л",
+    "weightGrams": 0,
+    "volumeMl": 750,
+    "price": 1390,
+    "description": ""
+  },
+  {
+    "id": "bar_wine_assorted",
+    "category": "bar",
+    "name": "Вино в ассортименте",
+    "weightLabel": "0,75 л",
+    "weightGrams": 0,
+    "volumeMl": 750,
+    "price": 1690,
+    "description": "Белое или красное, сухое или полусладкое.",
+    "hasVariantNote": true,
+    "variantPlaceholder": "Например: 2 бел. сух., 2 красн. п/сл."
+  },
+  {
+    "id": "bar_cognac_classic",
+    "category": "bar",
+    "name": "Коньяк классический",
+    "weightLabel": "0,5 л",
+    "weightGrams": 0,
+    "volumeMl": 500,
+    "price": 2190,
+    "description": ""
+  },
+  {
+    "id": "bar_cognac_3yr",
+    "category": "bar",
+    "name": "Коньяк 3 года",
+    "weightLabel": "0,5 л",
+    "weightGrams": 0,
+    "volumeMl": 500,
+    "price": 2690,
+    "description": ""
+  },
+  {
+    "id": "bar_cognac_5yr",
+    "category": "bar",
+    "name": "Коньяк 5 лет",
+    "weightLabel": "0,5 л",
+    "weightGrams": 0,
+    "volumeMl": 500,
+    "price": 3190,
+    "description": ""
+  },
+  {
+    "id": "bar_vodka",
+    "category": "bar",
+    "name": "Водка",
+    "weightLabel": "0,5 л",
+    "weightGrams": 0,
+    "volumeMl": 500,
+    "price": 1490,
+    "description": ""
+  },
+  {
+    "id": "bar_whisky",
+    "category": "bar",
+    "name": "Виски",
+    "weightLabel": "0,7 л",
+    "weightGrams": 0,
+    "volumeMl": 700,
+    "price": 2990,
+    "description": ""
+  },
+  {
+    "id": "bar_rum",
+    "category": "bar",
+    "name": "Ром белый",
+    "weightLabel": "0,7 л",
+    "weightGrams": 0,
+    "volumeMl": 700,
+    "price": 3290,
+    "description": ""
+  },
+  {
+    "id": "bar_tequila",
+    "category": "bar",
+    "name": "Текила серебряная",
+    "weightLabel": "0,7 л",
+    "weightGrams": 0,
+    "volumeMl": 700,
+    "price": 3890,
+    "description": ""
+  },
+  {
+    "id": "bar_gin",
+    "category": "bar",
+    "name": "Джин сухой",
+    "weightLabel": "0,5 л",
+    "weightGrams": 0,
+    "volumeMl": 500,
+    "price": 1890,
+    "description": ""
+  }
+];
+'use strict';
+const CAT=[['cold','Холодные закуски'],['hot','Горячие блюда'],['salads','Салаты *'],['sides','Гарниры *'],['bakery','Выпечка / десерты'],['bar','Бар']];
+const VARIANTS={bar_cola_tonic:['Кола','Тоник'],bar_water:['С газом','Без газа'],bar_juice:['Ананасовый','Апельсиновый','Вишнёвый','Мультифруктовый','Томатный','Яблочный'],bar_wine_assorted:['Белое сухое','Белое полусладкое','Красное сухое','Красное полусладкое']};
+const ALCOHOL=new Set(['bar_sparkling_brut','bar_sparkling_semisweet','bar_wine_assorted','bar_cognac_classic','bar_cognac_3yr','bar_cognac_5yr','bar_vodka','bar_whisky','bar_rum','bar_tequila','bar_gin']);
+const ITEMS=new Map(MENU_ITEMS.map(i=>[i.id,i]));
+const KEY='banquet_demo_v1', LEGACY=[];
+const S={guests:10,budgetPerPerson:3500,quantities:{},variants:{},notes:{},clientName:'',clientPhone:'',eventDate:'',clientNotes:'',tab:'manual',filter:'all',search:'',onlyChosen:false,autoMode:'standard',customHot:true,hotOneId:'hot_pork_medallions',hotTwoId:'hot_chicken_grill',hotKinds:1,autoMessage:'',openVariants:{}};
+const $=id=>document.getElementById(id);
+const money=n=>Math.round(n).toLocaleString('ru-RU')+' ₽';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp=(v,low,high,fallback)=>{if(v==null||String(v).trim()==='')return fallback;const n=Number(v);return Number.isFinite(n)?Math.min(high,Math.max(low,Math.trunc(n))):fallback};
+function toast(text,bad=false){const el=$('toast');el.textContent=text;el.className='toast show'+(bad?' error':'');clearTimeout(window._banquetToast);window._banquetToast=setTimeout(()=>el.className='toast',4000)}
+function itemQty(id){return VARIANTS[id]?Object.values(S.variants[id]||{}).reduce((x,n)=>x+clamp(n,0,999,0),0):clamp(S.quantities[id],0,999,0)}
+function optQty(id,opt){return clamp((S.variants[id]||{})[opt],0,999,0)}
+function entries(){let out=[];for(const item of MENU_ITEMS){if(VARIANTS[item.id]){for(const [opt,n] of Object.entries(S.variants[item.id]||{})){const qty=clamp(n,0,999,0);if(qty)out.push({item,option:opt,qty,cost:qty*item.price})}}else{const qty=itemQty(item.id);if(qty)out.push({item,option:'',qty,cost:qty*item.price})}}return out}
+function totals(){const list=entries();let cost=0,food=0,drinks=0,hot=0,unknown=0,units=0;for(const e of list){cost+=e.cost;units+=e.qty;if(e.item.weightGrams==null)unknown+=e.qty;else food+=(e.item.weightGrams||0)*e.qty;drinks+=(e.item.volumeMl||0)*e.qty;if(e.item.category==='hot')hot+=e.qty}return {list,cost,food,drinks,hot,unknown,units,distinct:new Set(list.map(e=>e.item.id)).size,planned:S.guests*S.budgetPerPerson,balance:S.guests*S.budgetPerPerson-cost}}
+function serialized(){return {format:'banquet-demo-order',version:4,menuRevision:"demo-1",autoMode:S.autoMode,customHot:S.customHot,hotOneId:S.hotOneId,hotTwoId:S.hotTwoId,hotKinds:S.hotKinds,guests:S.guests,budgetPerPerson:S.budgetPerPerson,quantities:{...S.quantities},variants:JSON.parse(JSON.stringify(S.variants)),notes:{...S.notes},clientName:S.clientName,clientPhone:S.clientPhone,eventDate:S.eventDate,clientNotes:S.clientNotes}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(serialized()))}catch(e){}}
+function loadObject(raw){if(!raw||typeof raw!=='object'||Array.isArray(raw)||!raw.quantities||typeof raw.quantities!=='object'||Array.isArray(raw.quantities))throw Error('Некорректный файл заказа');if(raw.format&&raw.format!=='banquet-demo-order')throw Error('Другой формат заказа');if(raw.version&&![1,2,3,4].includes(raw.version))throw Error('Неподдерживаемая версия');const g=clamp(raw.guests,1,300,10),b=clamp(raw.budgetPerPerson,0,10000000,3500),q={},v={},notes={};let cost=0;
+ for(const item of MENU_ITEMS){let n=clamp(raw.quantities[item.id],0,999,0);if(VARIANTS[item.id]){const rawVariants=raw.variants?.[item.id];let total=0;if(rawVariants&&typeof rawVariants==='object'&&!Array.isArray(rawVariants)){for(const opt of [...VARIANTS[item.id],'Не уточнено']){const k=clamp(rawVariants[opt],0,999,0);if(k){(v[item.id]??={})[opt]=k;total+=k}}if(total>999)throw Error('Слишком большое количество '+item.name)}if(total===0&&n>0){v[item.id]={'Не уточнено':n};total=n}cost+=total*item.price}
+ else if(n){q[item.id]=n;cost+=n*item.price}if(typeof raw.notes?.[item.id]==='string')notes[item.id]=raw.notes[item.id].slice(0,400)}
+ if(cost>g*b)throw Error('Заказ превышает бюджет, сначала увеличьте лимит в исходном файле');
+ S.guests=g;S.budgetPerPerson=b;S.quantities=q;S.variants=v;S.notes=notes;for(const k of ['clientName','clientPhone','eventDate','clientNotes'])S[k]=typeof raw[k]==='string'?raw[k].slice(0,k==='clientNotes'?400:160):'';if(['economy','standard','festive','hearty'].includes(raw.autoMode))S.autoMode=raw.autoMode;
+ S.customHot=typeof raw.customHot==='boolean'?raw.customHot:true;
+ const allowedHot=MENU_ITEMS.filter(i=>i.category==='hot').map(i=>i.id);
+ S.hotOneId=allowedHot.includes(raw.hotOneId)?raw.hotOneId:'hot_pork_medallions';
+ S.hotTwoId=allowedHot.includes(raw.hotTwoId)?raw.hotTwoId:'hot_chicken_grill';
+ S.hotKinds=Number(raw.hotKinds)===2?2:1;
+ if(S.hotTwoId===S.hotOneId)S.hotTwoId=allowedHot.find(id=>id!==S.hotOneId);
+ S.autoMessage='';}
+function restore(){for(const key of [KEY,...LEGACY]){try{const raw=localStorage.getItem(key);if(raw){loadObject(JSON.parse(raw));if(key!==KEY)persist();return}}catch(e){/* corrupted saved data should never block startup */}}}
+function setQty(id,value,option=''){const item=ITEMS.get(id);if(!item)return;const n=clamp(value,0,999,0),old=option?optQty(id,option):itemQty(id);if(VARIANTS[id]&&!option)return;if(option&&itemQty(id)-old+n>999){toast('Максимум 999 единиц на одну позицию',true);renderAll();return}
+ if(n>old&&totals().cost+(n-old)*item.price>S.guests*S.budgetPerPerson){toast('Нельзя превысить бюджет. Уменьшите количество.',true);renderAll();return}
+ if(option){S.variants[id]??={};if(n)S.variants[id][option]=n;else delete S.variants[id][option];if(!Object.keys(S.variants[id]).length)delete S.variants[id]}
+ else if(n)S.quantities[id]=n;else delete S.quantities[id];S.autoMessage='';persist();renderAll()}
+function setNumber(field,v){const next=field==='guests'?clamp(v,1,300,S.guests):clamp(v,0,10000000,S.budgetPerPerson);const planned=field==='guests'?next*S.budgetPerPerson:S.guests*next;if(planned<totals().cost){toast('Текущий заказ станет дороже бюджета. Сначала уменьшите заказ.',true);renderHeader();return}S[field]=next;S.autoMessage='';persist();renderAll()}
+function switchTab(tab,scroll=true){S.tab=tab;for(const [name,id,btn] of [['manual','manualPage','tabManual'],['auto','autoPage','tabAuto'],['result','resultPage','tabResult']]){$(id).classList.toggle('active',tab===name);$(btn).classList.toggle('active',tab===name);$(btn).setAttribute('aria-selected',String(tab===name))}if(scroll)window.scrollTo({top:0,behavior:'instant'})}
+function renderHeader(){const t=totals();$('guestsInput').value=S.guests;$('budgetInput').value=S.budgetPerPerson;$('budgetTotal').textContent=money(t.planned);$('spentTotal').textContent=money(t.cost);$('remainingTotal').textContent=money(Math.abs(t.balance));$('remainingTotal').className=t.balance<0?'over':'remaining';$('tabCount').textContent=t.distinct?'('+t.distinct+')':''}
+function stepper(id,n,opt=''){const at=`data-id="${esc(id)}"`+(opt?` data-option="${esc(opt)}"`:'');return `<div class="stepper"><button type="button" data-action="minus" ${at} aria-label="Уменьшить">−</button><input type="number" class="qtyinp" min="0" max="999" value="${n}" ${at} aria-label="Количество"><button type="button" data-action="plus" ${at} aria-label="Увеличить">+</button></div>`}
+function renderFilters(){let html=`<button class="filterbtn ${S.filter==='all'?'active':''}" data-filter="all">Всё меню</button>`;for(const [cat,title] of CAT)html+=`<button class="filterbtn ${S.filter===cat?'active':''}" data-filter="${cat}">${esc(title)}</button>`;$('filterRow').innerHTML=html;$('onlyChosen').textContent=S.onlyChosen?'Показать все':'Только выбранные'}
+function renderCatalog(){let html='',nCat=0;for(const [cat,title] of CAT){if(S.filter!=='all'&&S.filter!==cat)continue;const list=MENU_ITEMS.filter(i=>i.category===cat&&(!S.onlyChosen||itemQty(i.id)>0)&&(!S.search||(i.name+' '+(i.description||'')).toLowerCase().includes(S.search)));if(!list.length)continue;nCat++;html+=`<section class="category"><h2>${esc(title)}</h2>`;for(const item of list){const id=item.id,qty=itemQty(id);let options='',action='';if(VARIANTS[id]){const open=(id in S.openVariants)?S.openVariants[id]:qty>0;action=`<button class="simplebtn" type="button" data-action="variant" data-id="${esc(id)}">${open?'Скрыть виды':'Выбрать вид'}</button>`;if(open){let opts=[...VARIANTS[id]];if(optQty(id,'Не уточнено'))opts.push('Не уточнено');options=`<div class="varblock">${opts.map(opt=>`<div class="varitem"><span>${esc(opt)}</span>${stepper(id,optQty(id,opt),opt)}</div>`).join('')}</div>`}}
+ else{action=stepper(id,qty)}let note='';if(id==='bakery_cheesecake'&&qty)note=`<div class="variantnote">Вид чизкейка: <input data-note="${esc(id)}" maxlength="400" value="${esc(S.notes[id]||'')}" placeholder="Уточните при необходимости"></div>`;
+ html+=`<article class="menuitem ${qty?'selected':''}"><div><div class="dishname">${esc(item.name)}</div>${item.description?`<div class="description">${esc(item.description)}</div>`:''}<div class="spec">${esc(item.weightLabel)}${(cat==='salads'||cat==='sides')?' · общая тарелка':''}</div></div><div class="itemright"><div class="price">${money(item.price)}</div>${action}${qty?`<div class="subtotal">${qty} шт. · ${money(qty*item.price)}</div>`:''}</div>${options}${note}</article>`}
+ html+='</section>'}if(!nCat)html='<div class="empty">Блюд по запросу не найдено.</div>';$('catalog').innerHTML=html}
+function chosenHotInfo(){if(!S.customHot)return {ok:true,reason:'',cost:0,remaining:S.guests*S.budgetPerPerson,q:null};
+ const one=ITEMS.get(S.hotOneId),two=ITEMS.get(S.hotTwoId),g=S.guests,n1=g,n2=S.hotKinds===2?g:0,limit=g*S.budgetPerPerson;
+ if(!one||one.category!=='hot'||(n2&&(!two||two.category!=='hot')))return {ok:false,reason:'Выберите горячее из списка.'};
+ if(n2&&one.id===two.id)return {ok:false,reason:'Выберите два разных горячих блюда.'};
+ const cost=one.price*n1+(n2?two.price*n2:0),q={[one.id]:n1};if(n2)q[two.id]=n2;
+ if(cost>limit)return {ok:false,reason:`Выбранное горячее стоит ${money(cost)}, а бюджет ${money(limit)}. Не хватает ${money(cost-limit)}. Увеличьте бюджет или выберите другое горячее.`,cost,remaining:limit-cost};
+ return {ok:true,cost,remaining:limit-cost,q,n1,n2,one,two};}
+function renderHotSettings(){
+ $('customHotToggle').checked=S.customHot;$('hotControls').hidden=!S.customHot;
+ const hot=MENU_ITEMS.filter(i=>i.category==='hot');
+ const options=items=>items.map(i=>`<option value="${esc(i.id)}">${esc(i.name)} · ${money(i.price)} · ${esc(i.weightLabel)}</option>`).join('');
+ if(!$('hotOne').options.length)$('hotOne').innerHTML=options(hot);
+ $('hotOne').value=S.hotOneId;
+ const other=hot.filter(i=>i.id!==S.hotOneId);
+ if(!other.some(i=>i.id===S.hotTwoId))S.hotTwoId=other[0].id;
+ $('hotTwo').innerHTML=options(other);$('hotTwo').value=S.hotTwoId;
+ for(const radio of document.querySelectorAll('[name="hotKinds"]'))radio.checked=Number(radio.value)===S.hotKinds;
+ $('hotTwoField').hidden=S.hotKinds!==2;$('hotGrid').classList.toggle('single',S.hotKinds!==2);
+ $('hotOneQty').textContent=S.guests;$('hotTwoCount').textContent=S.guests;
+ const info=chosenHotInfo(),el=$('hotBudgetInfo');
+ if(!S.customHot){$('generateBtn').disabled=false;return}
+ if(!info.ok){el.className='hotcost error';el.textContent=info.reason;$('generateBtn').disabled=true;return}
+ el.className='hotcost';el.innerHTML=`Выбранное горячее: <b>${info.n1} × ${money(info.one.price)}</b>${info.n2?` + <b>${info.n2} × ${money(info.two.price)}</b>`:''} = <strong>${money(info.cost)}</strong><br>Всего горячих порций: <b>${info.n1+info.n2}</b> (${S.hotKinds} на гостя).<br>Осталось на остальные блюда и напитки: <strong>${money(info.remaining)}</strong>. Алкоголь не добавляется.`;
+ $('generateBtn').disabled=false;
+}
+function renderAuto(){for(const el of document.querySelectorAll('[data-mode]'))el.classList.toggle('active',el.dataset.mode===S.autoMode);renderHotSettings();$('autoInfo').textContent=S.autoMessage||'';$('autoInfo').className='resultnote'+(S.autoMessage&&S.autoMessage.includes('не хватило')?' warn':'')}
+function renderResult(){const t=totals();$('summaryLine').textContent=`${S.guests} гостей · лимит ${money(t.planned)} (${money(S.budgetPerPerson)} на человека) · осталось ${money(t.balance)}`;let html='<table class="ordertable"><thead><tr><th>Блюдо</th><th>Количество</th><th>Цена</th><th>Сумма</th></tr></thead><tbody>';for(const [cat,title] of CAT){const group=t.list.filter(e=>e.item.category===cat);if(!group.length)continue;html+=`<tr class="sheetcat"><td colspan="4">${esc(title)}</td></tr>`;for(const e of group){const n=S.notes[e.item.id]||'';html+=`<tr><td><strong>${esc(e.item.name)}</strong><div class="sheetcaption">${esc(e.item.weightLabel)}${e.option?' · '+esc(e.option):''}${n?' · '+esc(n):''}</div></td><td>${e.qty}</td><td>${money(e.item.price)}</td><td><strong>${money(e.cost)}</strong></td></tr>`}}html+='</tbody></table>';if(!t.list.length)html='<div class="empty">Выбранных блюд пока нет. Перейдите в «Ручной» или «Автоматический» режим.</div>';$('orderRows').innerHTML=html;$('sheetTotal').textContent=money(t.cost);$('sheetPerPerson').textContent=money(t.cost/S.guests)+' на человека';$('sheetMass').innerHTML=`Известный вес еды: <b>${(t.food/1000).toLocaleString('ru-RU',{maximumFractionDigits:2})} кг</b> (${Math.round(t.food/S.guests)} г/чел.)<br>Напитки: <b>${(t.drinks/1000).toLocaleString('ru-RU',{maximumFractionDigits:2})} л</b> (${Math.round(t.drinks/S.guests)} мл/чел.)`;
+ const msgs=[];if(t.hot<S.guests)msgs.push(`Горячих порций ${t.hot} на ${S.guests} гостей.`);if(t.unknown)msgs.push('Вес некоторых позиций не указан.');if(t.list.some(e=>e.option==='Не уточнено'))msgs.push('Уточните разновидности напитков.');$('sheetAlerts').textContent=msgs.join(' ');
+ $('printMeta').textContent=[S.clientName&&'Заказчик: '+S.clientName,S.clientPhone&&'Телефон: '+S.clientPhone,S.eventDate&&'Дата: '+S.eventDate,S.clientNotes&&'Пожелания: '+S.clientNotes].filter(Boolean).join(' · ')}
+function renderAll(){renderHeader();renderFilters();renderCatalog();renderAuto();renderResult();switchTab(S.tab,false)}
+function add(q,id,n,limit){const item=ITEMS.get(id);if(!item||!n)return false;const old=q[id]||0;if(old+n>999)return false;const used=Object.entries(q).reduce((sum,[key,k])=>sum+k*ITEMS.get(key).price,0);if(used+n*item.price>limit)return false;q[id]=old+n;return true}
+// Все автоматические режимы работают только с безалкогольными напитками.
+function baseAuto(mode){const g=S.guests,limit=g*S.budgetPerPerson,q={},shared=Math.ceil(g/4);const cheap=Math.min(...MENU_ITEMS.filter(i=>i.category==='hot').map(i=>i.price)),minimum=cheap*g+shared*ITEMS.get('bar_mors').price;if(limit>=minimum)add(q,'bar_mors',shared,limit);
+ const desired=mode==='economy'?['hot_pork_medallions','hot_chicken_grill']:mode==='festive'?['hot_trout_veg','hot_beef_mash']:['hot_pork_shashlik','hot_chicken_grill'];for(let i=0;i<g;i++){const used=orderCost(q);const reserve=limit>=minimum?(g-i-1)*cheap:0;const picks=[...new Set([desired[i%desired.length],'hot_beef_mash','hot_pork_shashlik','hot_chicken_grill','hot_pork_medallions'])];for(const id of picks){if(used+ITEMS.get(id).price+reserve<=limit){add(q,id,1,limit);break}}}
+ if(!q.bar_mors)for(let i=0;i<shared;i++)if(!add(q,'bar_mors',1,limit))break;
+ const pref=mode==='economy'?[['salad_herring_fur',shared],['side_potato_wedges',shared],['bakery_wheat_bun',g],['cold_eggplant_veg',shared]]:mode==='festive'?[['salad_olivier_chicken',shared],['salad_greek',shared],['side_grilled_veg',shared],['cold_cheese_set',shared],['cold_meat_set',shared],['bakery_wheat_bun',g],['cold_salmon',shared]]:[['salad_olivier_chicken',shared],['salad_herring_fur',shared],['side_potato_wedges',shared],['cold_meat_set',shared],['bakery_wheat_bun',g],['cold_eggplant_veg',shared]];
+ for(const [id,n] of pref)for(let i=0;i<n;i++)if(!add(q,id,1,limit))break;
+ if(mode!=='economy'){const upgrade=mode==='festive'?['cold_bruschetta_set','salad_caesar','cold_tartlets_caviar','cold_canape_set','bakery_cheesecake']:['cold_bruschetta_set','salad_greek','cold_cheese_set','bakery_cheesecake'];for(const id of upgrade)for(let i=0;i<Math.max(1,Math.ceil(g/5));i++)if(!add(q,id,1,limit))break}return q}
+function orderCost(q){return Object.entries(q).reduce((sum,[id,n])=>sum+ITEMS.get(id).price*n,0)}
+function heartyAuto(){const g=S.guests,limit=g*S.budgetPerPerson,q={};
+ for(let i=0;i<g;i++){const reserve=Math.max(0,g-i-1)*Math.min(ITEMS.get('hot_chicken_grill').price,ITEMS.get('hot_pork_medallions').price);const id=(i%3===0?'hot_chicken_grill':'hot_pork_medallions');const used=orderCost(q);if(used+ITEMS.get(id).price+reserve<=limit)add(q,id,1,limit);else add(q,'hot_chicken_grill',1,limit)}
+ fillHearty(q,limit,g);return q}
+function fillHearty(q,limit,g){
+ // Напитки включаем до дополнительной еды, чтобы «сытное» не означало стол без воды.
+ for(let i=q.bar_mors||0;i<Math.ceil(g/4);i++)if(!add(q,'bar_mors',1,limit))break;
+ const quotas=[['salad_herring_fur',g],['side_potato_wedges',Math.ceil(1.5*g)],['bakery_wheat_bun',g],['bakery_rye_bun',Math.ceil(.6*g)],['salad_olivier_chicken',Math.ceil(.8*g)],['side_grilled_veg',Math.ceil(.7*g)],['cold_eggplant_veg',Math.ceil(.7*g)],['salad_greek',Math.ceil(.55*g)],['cold_meat_set',Math.ceil(g/3)],['cold_canape_set',Math.ceil(g/5)]];
+ const cap=new Map(quotas),maxCat={salads:Math.ceil(1.5*g),sides:Math.ceil(1.8*g),bakery:Math.ceil(1.3*g),cold:Math.ceil(.9*g)};
+ for(let pass=0;pass<16*g;pass++){
+   const available=quotas.filter(([id])=>{const it=ITEMS.get(id);const catCount=Object.entries(q).reduce((s,[k,n])=>s+(ITEMS.get(k).category===it.category?n:0),0);return (q[id]||0)<cap.get(id)&&catCount<(maxCat[it.category]||0)&&it.weightGrams>0&&orderCost(q)+it.price<=limit});
+   if(!available.length)break;
+   // Выбираем массу за рубль, но штрафуем повторения одной позиции.
+   available.sort((a,b)=>{const score=id=>{const it=ITEMS.get(id);return it.weightGrams/it.price/(1+(q[id]||0)/(g*.40+1))};return score(b[0])-score(a[0])});
+   add(q,available[0][0],1,limit);
+ }
+}
+function fillOtherWithFixedHot(mode,q,limit,g){
+ // Горячее уже закреплено пользователем: никакие другие горячие не добавляются.
+ const shared=Math.ceil(g/4);
+ // Приоритетное безалкогольное питьё: около 250 мл на гостя.
+ for(let i=0;i<shared;i++)if(!add(q,'bar_mors',1,limit))break;
+ if(mode==='hearty'){fillHearty(q,limit,g);return q}
+ const specs=mode==='economy'?
+ [['salad_herring_fur',Math.ceil(g/3)],['side_potato_wedges',Math.ceil(g/2)],['cold_eggplant_veg',shared],['bakery_wheat_bun',g],['salad_olivier_chicken',shared],['cold_vegetable_plate',shared],['bar_mineral',Math.ceil(g/6)]]:
+ mode==='festive'?
+ [['salad_olivier_chicken',shared],['salad_caesar',shared],['side_grilled_veg',Math.ceil(g/2)],['cold_cheese_set',shared],['cold_meat_set',shared],['cold_salmon',shared],['cold_bruschetta_set',shared],['bakery_cheesecake',Math.ceil(g/2)],['bar_mineral',Math.ceil(g/6)],['cold_tartlets_caviar',shared],['cold_canape_set',Math.ceil(g/8)]]:
+ [['salad_herring_fur',shared],['salad_olivier_chicken',shared],['side_potato_wedges',Math.ceil(g/2)],['cold_meat_set',shared],['cold_eggplant_veg',shared],['bakery_wheat_bun',Math.ceil(g/2)],['cold_cheese_set',Math.ceil(g/5)],['salad_greek',shared],['bar_mineral',Math.ceil(g/6)],['cold_bruschetta_set',Math.ceil(g/6)]];
+ // Round robin: сначала по одному из разделов, потом дополнительные порции.
+ const maxQ=new Map(specs);
+ let changed=true;while(changed){changed=false;for(const [id] of specs){if((q[id]||0)<maxQ.get(id)&&add(q,id,1,limit))changed=true}}
+ // При достаточном бюджете добавляем разнообразие, но не десятки одинаковых тарелок.
+ const extra=mode==='economy'?[['side_grilled_veg',Math.ceil(g/3)],['salad_greek',Math.ceil(g/3)],['cold_meat_set',shared]]:
+ mode==='festive'?[['cold_canape_set',Math.ceil(g/5)],['cold_tartlets_caviar',shared],['cold_olives',shared]]:
+ [['side_grilled_veg',shared],['cold_canape_set',Math.ceil(g/6)],['bakery_cheesecake',Math.ceil(g/3)]];
+ for(const [id,cap] of extra)for(let i=0;i<cap;i++)if(!add(q,id,1,limit))break;
+ return q;
+}
+function generateAuto(mode=S.autoMode){
+ if(S.customHot){const fixed=chosenHotInfo();if(!fixed.ok)throw Error(fixed.reason);return fillOtherWithFixedHot(mode,{...fixed.q},S.guests*S.budgetPerPerson,S.guests)}
+ return mode==='hearty'?heartyAuto():baseAuto(mode);
+}
+function applyAuto(){const fixed=chosenHotInfo();if(!fixed.ok){toast(fixed.reason,true);renderAuto();return}
+ const prior=totals().units;if(prior&&!confirm('Автоподбор заменит текущий заказ. Продолжить?'))return;
+ let q;try{q=generateAuto()}catch(e){toast(e.message,true);return}
+ if(Object.keys(q).some(id=>ALCOHOL.has(id))||orderCost(q)>S.guests*S.budgetPerPerson){toast('Ошибка проверки автоподбора. Заказ не изменён.',true);return}
+ S.quantities=q;S.variants={};S.notes={};S.openVariants={};const t=totals();
+ const title=S.customHot?(S.hotKinds===2?'Два горячих для каждого гостя. ':'Одно горячее для каждого гостя. '):'';
+ S.autoMessage=t.hot<S.guests?`${title}Готово, но бюджета не хватило для горячего каждому: ${t.hot} из ${S.guests} порций.`:`${title}Подбор готов без алкоголя. Сумма ${money(t.cost)} в пределах бюджета. Известный вес еды — ${Math.round(t.food/S.guests)} г на человека.`;
+ persist();renderAll();switchTab('result');toast('Меню подобрано — проверьте итог.');}
+function download(name,content,mime){const url=URL.createObjectURL(new Blob([content],{type:mime}));const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+function exportJson(){download('Банкет_демо_заказ.json',JSON.stringify(serialized(),null,2),'application/json;charset=utf-8')}
+function exportHtml(){download('Banquet_calculator_demo.html','<!DOCTYPE html>\n'+document.documentElement.outerHTML,'text/html;charset=utf-8')}
+function buildText(){const t=totals();const lines=['БАНКЕТ · Демонстрационное меню',`Гостей: ${S.guests} · Бюджет: ${money(t.planned)}`];for(const [cat,title] of CAT){const group=t.list.filter(e=>e.item.category===cat);if(group.length){lines.push('',title.toUpperCase());for(const e of group)lines.push(`${e.item.name}${e.option?' / '+e.option:''} · ${e.qty} шт. × ${money(e.item.price)} = ${money(e.cost)}`)}}lines.push('',`ИТОГО: ${money(t.cost)}`,`На человека: ${money(t.cost/S.guests)}`,`Осталось: ${money(t.balance)}`,`Известная масса еды: ${t.food} г, напитков: ${t.drinks} мл`);return lines.join('\n')}
+function exportText(){const str=buildText();if(navigator.clipboard?.writeText)navigator.clipboard.writeText(str).then(()=>toast('Текст скопирован')).catch(()=>copyBackup(str));else copyBackup(str)}
+function copyBackup(str){const el=document.createElement('textarea');el.value=str;document.body.append(el);el.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}el.remove();toast(ok?'Текст скопирован':'Не удалось скопировать текст',!ok)}
+// Self-contained XLSX writer: Excel-compatible OOXML with 2 sheets, stored inside a ZIP without external libraries.
+const xe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const colName=n=>{let s='';for(n++;n;n=Math.floor((n-1)/26))s=String.fromCharCode(65+(n-1)%26)+s;return s};
+function excelCell(row,col,entry){if(entry==null)return '';let value=entry,style=0,formula=null;if(typeof entry==='object'&&!Array.isArray(entry)){value=entry.value;style=entry.style||0;formula=entry.formula||null}const ref=colName(col)+(row);const st=` s="${style}"`;if(formula)return `<c r="${ref}"${st}><f>${xe(formula)}</f><v>${Number(value)||0}</v></c>`;if(typeof value==='number')return `<c r="${ref}"${st}><v>${value}</v></c>`;return `<c r="${ref}"${st} t="inlineStr"><is><t xml:space="preserve">${xe(value)}</t></is></c>`}
+function sheetXml(rows,widths){let data='';for(let i=0;i<rows.length;i++){let cells='';const r=rows[i]||[];for(let c=0;c<r.length;c++)cells+=excelCell(i+1,c,r[c]);data+=`<row r="${i+1}">${cells}</row>`}const cols=widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join('');return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="17"/><cols>${cols}</cols><sheetData>${data}</sheetData></worksheet>`}
+const cs=(value,style=0)=>({value,style});
+function zipCreate(files){const encoder=new TextEncoder(),parts=[],central=[];let offset=0;const crcTable=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xedb88320^(c>>>1):c>>>1;crcTable[n]=c>>>0}
+ const le=(arr,position,value,count)=>{for(let i=0;i<count;i++)arr[position+i]=(value>>>(8*i))&255};
+ for(const [name,content] of files){const n=encoder.encode(name),data=encoder.encode(content);let crc=0xffffffff;for(const b of data)crc=(crc>>>8)^crcTable[(crc^b)&255];crc=(crc^0xffffffff)>>>0;const h=new Uint8Array(30+n.length);le(h,0,0x04034b50,4);le(h,4,20,2);le(h,6,0x0800,2);le(h,8,0,2);le(h,14,crc,4);le(h,18,data.length,4);le(h,22,data.length,4);le(h,26,n.length,2);h.set(n,30);parts.push(h,data);
+ const c=new Uint8Array(46+n.length);le(c,0,0x02014b50,4);le(c,4,20,2);le(c,6,20,2);le(c,8,0x0800,2);le(c,10,0,2);le(c,16,crc,4);le(c,20,data.length,4);le(c,24,data.length,4);le(c,28,n.length,2);le(c,42,offset,4);c.set(n,46);central.push(c);offset+=h.length+data.length}
+ const centralOffset=offset;for(const c of central){parts.push(c);offset+=c.length}const footer=new Uint8Array(22);le(footer,0,0x06054b50,4);le(footer,8,central.length,2);le(footer,10,central.length,2);le(footer,12,offset-centralOffset,4);le(footer,16,centralOffset,4);parts.push(footer);const output=new Uint8Array(offset+footer.length);let pos=0;for(const part of parts){output.set(part,pos);pos+=part.length}return output}
+function exportXlsx(){const t=totals(),r=[];r.push([cs('БАНКЕТ · Демонстрационное меню',1)]);r.push(['Демонстрационный заказ · Цены и блюда условные']);r.push(['Заказчик',S.clientName]);r.push(['Контакт',S.clientPhone]);r.push(['Дата и время',S.eventDate]);r.push(['Гостей',cs(S.guests,4),'Бюджет на человека',cs(S.budgetPerPerson,3)]);r.push(['Пожелания',S.clientNotes]);r.push([]);
+ r.push(['Раздел','Блюдо','Вариант','Выход','Кол-во','Цена, ₽','Сумма, ₽','Примечание'].map(x=>cs(x,2)));
+ const start=r.length+1;for(const [cat,title] of CAT)for(const e of t.list.filter(e=>e.item.category===cat)){const rr=r.length+1;r.push([title,e.item.name,e.option,e.item.weightLabel,cs(e.qty,4),cs(e.item.price,3),{value:e.cost,style:3,formula:`E${rr}*F${rr}`},S.notes[e.item.id]||''])}
+ const totalRow=r.length+1;r.push(['','','','','',cs('ИТОГО',2),(t.list.length?{value:t.cost,style:5,formula:`SUM(G${start}:G${totalRow-1})`}:cs(0,5))]);
+ r.push(['', '', '', '', '', 'На человека',cs(t.cost/S.guests,3)]);r.push(['', '', '', '', '', 'Осталось',cs(t.balance,3)]);
+ const summary=[[cs('БАНКЕТ · Сводка заказа',1)],[],['Показатель','Значение'].map(x=>cs(x,2)),['Количество гостей',cs(S.guests,4)],['Бюджет на человека, ₽',cs(S.budgetPerPerson,3)],['Общий бюджет, ₽',cs(t.planned,3)],['Сумма заказа, ₽',cs(t.cost,5)],['Остаток, ₽',cs(t.balance,3)],['Стоимость на человека, ₽',cs(t.cost/S.guests,3)],['Известный вес еды, г',cs(t.food,4)],['Еда на человека, г',cs(t.food/S.guests,4)],['Объём напитков, мл',cs(t.drinks,4)],['Напитки на человека, мл',cs(t.drinks/S.guests,4)],['Горячих порций',cs(t.hot,4)],[],['Примечание','Салаты и гарниры подаются в общих тарелках. Цены и блюда условные.']];
+ const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="#,##0.00\&quot; ₽\&quot;"/></numFmts><fonts count="4"><font><sz val="11"/><name val="Aptos"/></font><font><b/><sz val="17"/><color rgb="FF181818"/><name val="Aptos"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="11"/><name val="Aptos"/></font><font><b/><sz val="11"/><name val="Aptos"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF1F1F1F"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="6"><xf fontId="0" fillId="0" borderId="0" xfId="0"/><xf fontId="1" fillId="0" borderId="0" xfId="0"/><xf fontId="2" fillId="2" borderId="0" xfId="0" applyFill="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="164" fontId="3" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+ const rels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`;
+ const workbook=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Заказ" sheetId="1" r:id="rId1"/><sheet name="Сводка" sheetId="2" r:id="rId2"/></sheets><calcPr fullCalcOnLoad="1"/></workbook>`;
+ const wbRels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`;
+ const types=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`;
+ const xlsx=zipCreate([['[Content_Types].xml',types],['_rels/.rels',rels],['xl/workbook.xml',workbook],['xl/_rels/workbook.xml.rels',wbRels],['xl/styles.xml',styles],['xl/worksheets/sheet1.xml',sheetXml(r,[21,53,25,20,12,17,17,36])],['xl/worksheets/sheet2.xml',sheetXml(summary,[37,70])]]);
+ download('Банкет_демо_заказ.xlsx',xlsx,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');toast('Файл Excel сохранён — 2 листа: «Заказ» и «Сводка».')}
+async function importJson(file){if(!file)return;try{if(file.size>1000000)throw Error('Файл слишком большой');const raw=JSON.parse(await file.text()),backup=serialized();try{loadObject(raw)}catch(e){loadObject(backup);throw e}persist();for(const id of ['clientName','clientPhone','eventDate','clientNotes'])$(id).value=S[id];renderAll();toast('Заказ успешно загружен')}catch(e){toast('Ошибка импорта: '+e.message,true)}}
+function init(){restore();for(const id of ['clientName','clientPhone','eventDate','clientNotes']){$(id).value=S[id];$(id).addEventListener('input',e=>{S[id]=e.target.value;persist();renderResult()})}
+ $('tabManual').onclick=()=>switchTab('manual');$('tabAuto').onclick=()=>switchTab('auto');$('tabResult').onclick=()=>switchTab('result');$('guestsInput').addEventListener('change',e=>setNumber('guests',e.target.value));$('budgetInput').addEventListener('change',e=>setNumber('budgetPerPerson',e.target.value));
+ $('searchInput').oninput=e=>{S.search=e.target.value.toLowerCase().trim();renderCatalog()};$('onlyChosen').onclick=()=>{S.onlyChosen=!S.onlyChosen;renderFilters();renderCatalog()};$('filterRow').onclick=e=>{const btn=e.target.closest('[data-filter]');if(!btn)return;S.filter=btn.dataset.filter;renderFilters();renderCatalog()};
+ $('catalog').onclick=e=>{const btn=e.target.closest('[data-action]');if(!btn)return;const id=btn.dataset.id,opt=btn.dataset.option||'';if(btn.dataset.action==='variant'){S.openVariants[id]=!((id in S.openVariants)?S.openVariants[id]:itemQty(id)>0);renderCatalog();return}const old=opt?optQty(id,opt):itemQty(id);if(btn.dataset.action==='plus')setQty(id,old+1,opt);if(btn.dataset.action==='minus')setQty(id,old-1,opt)};
+ $('catalog').onchange=e=>{const el=e.target;if(el.classList.contains('qtyinp'))setQty(el.dataset.id,el.value,el.dataset.option||'');if(el.matches('[data-note]')){S.notes[el.dataset.note]=el.value.slice(0,400);persist();renderResult()}};
+ $('modes').onclick=e=>{const box=e.target.closest('[data-mode]');if(box){S.autoMode=box.dataset.mode;S.autoMessage='';persist();renderAuto()}};$('modes').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){const box=e.target.closest('[data-mode]');if(box){e.preventDefault();S.autoMode=box.dataset.mode;S.autoMessage='';persist();renderAuto()}}};
+ $('customHotToggle').onchange=e=>{S.customHot=e.target.checked;S.autoMessage='';persist();renderAuto()};
+ $('hotOne').onchange=e=>{S.hotOneId=e.target.value;S.autoMessage='';persist();renderAuto()};
+ $('hotTwo').onchange=e=>{S.hotTwoId=e.target.value;S.autoMessage='';persist();renderAuto()};
+ for(const radio of document.querySelectorAll('[name="hotKinds"]'))radio.onchange=e=>{S.hotKinds=Number(e.target.value)===2?2:1;S.autoMessage='';persist();renderAuto()};
+ $('generateBtn').onclick=applyAuto;$('clearOrderBtn').onclick=()=>{S.quantities={};S.variants={};S.notes={};S.autoMessage='';persist();renderAll();toast('Корзина очищена')};$('exportXlsx').onclick=exportXlsx;$('printBtn').onclick=()=>{renderResult();window.print()};$('exportJson').onclick=exportJson;$('saveHtml').onclick=exportHtml;$('copyOrder').onclick=exportText;$('importJson').onclick=()=>$('importFile').click();$('importFile').onchange=e=>{const file=e.target.files?.[0];e.target.value='';importJson(file)};renderAll()}
+window.addEventListener('DOMContentLoaded',init);
+
+</script></body></html>
